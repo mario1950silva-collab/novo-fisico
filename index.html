@@ -1,0 +1,471 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ENB Testes Físicos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: barra superior fixa com cinco áreas; cada área é uma folha de trabalho de coluna única ou dupla, fundo branco, números tabulares. */
+:root{
+  --bg:#ffffff; --surface:#f4f6fa; --ink:#0e1b33; --muted:#5a6680; --line:#dde3ec;
+  --accent:#c8102e; --navy:#12284c; --on-navy:#ffffff; --scale:#1d4f9e; --warn:#9a5b00; --warn-bg:#fff4dc;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0b1220; --surface:#131c30; --ink:#e8edf6; --muted:#98a5bd; --line:#27334c;
+  --accent:#ff6076; --navy:#182a4d; --on-navy:#f2f5fb; --scale:#7fb0ff; --warn:#ffcf7a; --warn-bg:#3a2c0d; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0b1220; --surface:#131c30; --ink:#e8edf6; --muted:#98a5bd; --line:#27334c;
+  --accent:#ff6076; --navy:#182a4d; --on-navy:#f2f5fb; --scale:#7fb0ff; --warn:#ffcf7a; --warn-bg:#3a2c0d; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-size:1.7rem} h3{font-size:1.25rem}
+p{margin:0}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--navy);color:var(--on-navy)}
+.top-in{max-width:1180px;margin:0 auto;padding:10px 16px 0;display:flex;flex-direction:column;gap:8px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand b{font-family:var(--display);font-size:1.5rem;letter-spacing:.03em;text-transform:uppercase}
+.brand span{font-size:.8rem;opacity:.8}
+.brand i{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav a{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;color:var(--on-navy);opacity:.72;text-decoration:none;padding:8px 14px;border-radius:6px 6px 0 0;white-space:nowrap}
+nav a:hover{opacity:1}
+nav a.on{background:var(--bg);color:var(--ink);opacity:1}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:22px 60px;display:flex;flex-direction:column;gap:22px}
+.note{background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:9px 12px;font-size:.88rem;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.cols{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:820px){.cols{grid-template-columns:minmax(0,1fr)}}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)} .small{font-size:.85rem}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chipbtn{font:inherit;font-weight:500;font-size:.88rem;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.chipbtn.on{background:var(--navy);border-color:var(--navy);color:var(--on-navy)}
+button.btn,.btn{font:inherit;font-weight:600;padding:9px 16px;border-radius:6px;border:1px solid var(--navy);background:var(--navy);color:var(--on-navy);cursor:pointer}
+button.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line);font-weight:500}
+button.btn.sm{padding:5px 10px;font-size:.85rem}
+button.btn.danger{background:transparent;border-color:var(--accent);color:var(--accent)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+label{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--muted);font-weight:500;min-width:0}
+input,select,textarea{font:inherit;font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:60px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.panel{background:var(--surface);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.alist{display:flex;flex-direction:column;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.alist button{font:inherit;text-align:left;background:var(--bg);color:var(--ink);border:0;border-bottom:1px solid var(--line);padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.alist button:last-child{border-bottom:0}
+.alist button.on{background:var(--navy);color:var(--on-navy)}
+.alist button span{font-size:.8rem;opacity:.75;white-space:nowrap}
+.tag{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:4px;padding:0 5px;margin-left:6px;opacity:.8}
+.entry{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,120px) minmax(0,1fr);gap:10px 14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.entry .nm{font-weight:600} .entry .nm small{display:block;font-weight:400;color:var(--muted)}
+.entry .inp{display:flex;align-items:center;gap:6px} .entry .inp span{color:var(--muted);font-size:.85rem;width:1.6em}
+@media (max-width:560px){.entry{grid-template-columns:minmax(0,1fr) minmax(0,120px)}.entry .fb{grid-column:1/-1}}
+.grp{font-family:var(--display);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;color:var(--accent);padding-top:14px}
+.band{display:inline-flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums;font-weight:600;font-size:.86rem;white-space:nowrap}
+.strip{display:inline-grid;grid-template-columns:repeat(10,1fr);gap:2px;width:92px;height:10px;flex:none}
+.strip i{background:color-mix(in srgb,var(--scale) 16%,var(--bg));border-radius:1px}
+.strip i.on{background:var(--scale);outline:2px solid var(--scale);outline-offset:0}
+.strip.lg{width:100%;max-width:300px;height:14px}
+.noref{color:var(--muted);font-size:.84rem;font-weight:400}
+.err{color:var(--accent);font-size:.84rem}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--display);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;color:var(--muted);border-bottom:2px solid var(--ink)}
+tfoot td{font-weight:600;border-bottom:0;border-top:2px solid var(--ink)}
+.scroll{overflow-x:auto;max-width:100%}
+td .sub{display:block;font-size:.76rem;color:var(--muted);font-weight:500}
+a.lnk{color:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;cursor:pointer}
+.fhead{display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--ink);padding-bottom:12px}
+.fhead h2{font-size:2.3rem}
+.facts{display:flex;gap:22px;flex-wrap:wrap}
+.facts div{display:flex;flex-direction:column} .facts b{font-family:var(--display);font-size:1.4rem}
+.trow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr) minmax(0,1.4fr) minmax(0,170px);gap:8px 18px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+@media (max-width:760px){.trow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.big{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:1rem;font-weight:600;color:var(--muted);margin-left:3px}
+.spark text{font-family:var(--body);font-size:10px;fill:var(--muted)}
+.dist{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;max-width:520px}
+.dist div{text-align:center;font-size:.72rem;color:var(--muted)}
+.dist b{display:block;border-radius:3px;padding:5px 0;font-size:.95rem;color:var(--ink);background:color-mix(in srgb,var(--scale) calc(var(--w)*1%),var(--bg));border:1px solid var(--line)}
+.test{display:flex;flex-direction:column;gap:12px;padding-block:20px;border-top:1px solid var(--line)}
+.test ol{margin:0;padding-left:1.3em;max-width:68ch;display:flex;flex-direction:column;gap:3px}
+.test p{max-width:68ch}
+figure{margin:0;background:#ffffff;border:1px solid var(--line);border-radius:8px;padding:8px;max-width:620px}
+figure img{display:block;width:100%;height:auto}
+figcaption{color:#5a6680;font-size:.82rem;padding-top:4px;text-align:center}
+.toc{display:flex;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-weight:500;max-width:90vw;z-index:9}
+.paper{background:#ffffff;color:#0e1b33;border:1px solid var(--line);border-radius:4px;padding:26px;overflow-x:auto}
+.empty{border:1px dashed var(--line);border-radius:8px;padding:26px;text-align:center;color:var(--muted)}
+</style>
+
+<header class="top"><div class="top-in">
+  <div class="brand"><i></i><b>ENB · Testes Físicos</b><span>Escola Nacional de Basquetebol · Sub-8 a Sub-14</span></div>
+  <nav id="nav">
+    <a href="#registo" data-tab="registo">Testes individuais</a>
+    <a href="#equipa" data-tab="equipa">Equipa</a>
+    <a href="#ficha" data-tab="ficha">Ficha individual</a>
+    <a href="#relatorios" data-tab="relatorios">Relatórios</a>
+    <a href="#testes" data-tab="testes">Descrição dos testes</a>
+  </nav>
+</div></header>
+<main class="wrap" id="view"></main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+/* ---------- Dados de referência: transcritos do documento ENB_Testes_Fisicos ---------- */
+const PCT=[90,80,70,60,50,40,30,20,10];
+const BANDS=["< P10","P10–19","P20–29","P30–39","P40–49","P50–59","P60–69","P70–79","P80–89","≥ P90"];
+const ESC=["Sub-8","Sub-10","Sub-12","Sub-14"];
+const TESTS=[
+ {k:"altura",nome:"Altura",un:"cm",dec:1,min:80,max:230,grupo:"Avaliação antropométrica",quadro:"Quadro 1",fonte:"Matulaitis, K. (2013)."},
+ {k:"peso",nome:"Peso",un:"kg",dec:1,min:10,max:160,grupo:"Avaliação antropométrica",quadro:"Quadro 2",fonte:"Matulaitis, K. (2013)."},
+ {k:"enverg",nome:"Envergadura",un:"cm",dec:1,min:80,max:240,grupo:"Avaliação antropométrica",quadro:"Quadro 3",fonte:"Matulaitis, K. (2013)."},
+ {k:"salto",nome:"Salto horizontal",un:"m",dec:2,min:0.3,max:3.5,grupo:"Força explosiva",quadro:"Quadro 4",fonte:"",ajuda:"em metros, ex.: 1,45"},
+ {k:"c20",nome:"20 m em corrida",un:"s",dec:2,min:2,max:15,lower:true,grupo:"Velocidade",quadro:"Quadro 5",fonte:"Matulaitis, K. (2013)."},
+ {k:"d20",nome:"20 m em drible",un:"s",dec:2,min:2,max:20,lower:true,grupo:"Velocidade",quadro:"Quadro 6",fonte:"Matulaitis, K. et al. (2019)."}
+];
+const T=Object.fromEntries(TESTS.map(t=>[t.k,t]));
+const REF={
+ altura:{a0:7,ampL:"Amplitude",p:{
+  90:[136.7,144.8,146.5,154.6,161,170.3,180,186,193.7,197.7,196],80:[134,140.2,144.8,151.9,157.3,166.1,176.6,182.7,191,194,193.4],
+  70:[131.4,137.7,143.6,150,155.5,164.2,172,179.4,187,190.7,191.4],60:[130.8,136.2,141.8,147.5,154,162.5,169.3,176.8,184.6,189,191],
+  50:[128.5,133.5,140.5,147,151.4,160,167,174,183,184.7,187.6],40:[127.2,132.5,139.9,145.7,149.5,157.3,164,171,180.5,183,186.3],
+  30:[125.3,130.6,139.7,144,147.4,155,161.5,169,178.5,181.3,185],20:[124.2,129,137.6,141,146,153,160,165,175,179,183.5],
+  10:[123.1,126.6,136,137,142.4,149,156.3,162.5,172,176,180.6]},
+  amp:["119,3–145,2","123,8–147,1","131,5–155,4","132–160,5","135–169","146–184,5","143–188","154–194","162–198","169–200,7","175,4–215,3"]},
+ peso:{a0:7,ampL:"Amplitude",p:{
+  90:[38.2,38.7,41.5,48,52.3,60,70.3,73.3,86.6,87.5,93],80:[31.5,34.7,37.4,41.8,48.2,53.7,63.3,70,76.8,81.3,84.7],
+  70:[30.2,32.8,36,39.7,44,51.5,57.2,66.5,74.9,77,82.6],60:[29,32.4,34.4,37,41.1,49.3,53.8,63.4,71,74.6,78],
+  50:[27.8,30.1,32.9,36,39.8,47,50.1,60.4,67.6,72.6,76.2],40:[25.9,28.2,31.6,34.5,38.2,44.1,48.9,57,66,70,74.9],
+  30:[25.3,26.8,31.3,33.6,36.9,42.2,45.8,53.5,62,68.6,72.9],20:[24.6,25.9,30.6,33,36.1,39.3,44,50,59.9,66,70.9],
+  10:[24.1,24.4,28.5,29.8,34.9,36.5,40,45.7,55,63.6,67.1]},
+  amp:["23,2–40,2","22,7–50","27,9–54,9","26,7–57,4","30,1–64,4","32–82,6","29,7–79,9","35,3–97,4","45–99","52,1–106,7","65–104"]},
+ enverg:{a0:7,ampL:"Amplitude",p:{
+  90:[137.2,147.7,148.2,161.4,162.5,180,187.3,195.5,203.5,207.4,209.5],80:[135.5,144.4,146.5,157.6,159.5,175,184.5,189,201.2,203.9,201.3],
+  70:[132,140.5,144.8,153.7,157.5,169.5,181.7,186.2,197.6,200.7,196],60:[130.7,136.7,143.5,152.3,156.8,167.5,179.5,184,195.6,194.5,195.2],
+  50:[128.5,133.6,143.2,151.8,154.9,166.6,174.7,181.8,192.6,189.5,193.5],40:[127,131.4,142,151.6,149.9,166,171.7,180.2,192.4,186,192.3],
+  30:[124.5,130.8,140,148.3,148.3,161.6,166.7,178.5,189.5,185.6,189.2],20:[123.4,129.3,138.5,146.6,146.7,160.8,164,174.4,186.4,182.9,186],
+  10:[122.8,127,136.7,145.2,143.8,157.5,162.5,170.4,185,182.3,182]},
+  amp:["115–145","122,4–149,5","131,2–156,4","143,9–170","140,7–172,2","155,1–188,3","155,7–187,8","162,3–198,5","174–225","108,7–212,1","180,2–218,2"]},
+ salto:{a0:7,ampL:"Amplitude P10–P90",p:{
+  90:[1.49,1.62,1.55,1.75,1.75,1.75],80:[1.34,1.47,1.44,1.62,1.65,1.63],70:[1.28,1.35,1.35,1.54,1.60,1.60],
+  60:[1.23,1.30,1.29,1.49,1.55,1.55],50:[1.22,1.22,1.23,1.38,1.52,1.51],40:[1.20,1.15,1.20,1.30,1.44,1.47],
+  30:[1.13,1.08,1.18,1.23,1.40,1.39],20:[1.06,1.01,1.13,1.16,1.22,1.31],10:[0.94,0.88,1.00,1.09,1.06,1.22]},
+  amp:["0,94–1,49","0,88–1,62","1,00–1,55","1,09–1,75","1,06–1,75","1,22–1,75"]},
+ c20:{a0:7,ampL:"Amplitude",p:{
+  90:[4.01,3.89,3.69,3.43,3.45,3.34,3.19,3.08,2.97,2.92,2.78],80:[4.1,3.93,3.73,3.5,3.53,3.4,3.22,3.14,3.03,2.96,2.89],
+  70:[4.13,3.96,3.79,3.62,3.59,3.45,3.28,3.2,3.08,3,2.91],60:[4.14,4.01,3.87,3.65,3.64,3.48,3.33,3.23,3.1,3.05,2.96],
+  50:[4.23,4.05,3.91,3.71,3.69,3.51,3.38,3.27,3.13,3.08,2.98],40:[4.29,4.08,3.95,3.77,3.74,3.57,3.45,3.31,3.16,3.1,3.02],
+  30:[4.43,4.14,4.01,3.83,3.79,3.63,3.48,3.34,3.2,3.12,3.07],20:[4.49,4.26,4.05,3.87,3.85,3.68,3.53,3.4,3.24,3.17,3.11],
+  10:[4.56,4.37,4.21,3.94,3.95,3.73,3.64,3.5,3.32,3.24,3.18]},
+  amp:["4,9–3,88","4,61–3,82","4,34–3,64","4,16–3,24","4,4–3,21","4,2–3,19","3,92–2,96","3,99–2,87","3,48–2,96","3,8–2,86","3,52–2,72"]},
+ d20:{a0:7,ampL:"Amplitude",p:{
+  90:[4.95,4.25,4.04,3.66,3.72],80:[5.03,4.55,4.12,3.78,3.92],70:[5.24,4.58,4.3,3.82,4.17],60:[5.39,4.64,4.42,3.87,4.24],
+  50:[5.81,4.69,4.5,3.91,4.36],40:[6.09,4.76,4.71,3.99,4.49],30:[6.14,4.95,4.83,4.04,4.59],20:[6.35,5.13,4.9,4.08,4.76],
+  10:[6.89,5.3,5.65,4.17,4.85]},
+  amp:["4,89–7,52","4,23–6,02","3,93–6,18","3,49–4,68","3,42–5,47"]}
+};
+const PROTO={
+ altura:{intro:"O <b>teste de altura</b> é uma avaliação antropométrica simples utilizada para acompanhar o crescimento dos jovens jogadores de basquetebol e comparar o resultado individual com valores de referência por idade.",
+  passos:["O jogador deve estar <b>descalço</b>.","Colocar-se de pé, numa posição natural e vertical.","<b>Calcanhares juntos</b> e em contacto com o plano de medição.","Pernas estendidas, sem elevar os calcanhares.","Tronco direito e cabeça orientada horizontalmente.","Registar a altura em <b>centímetros</b>, idealmente com precisão de <b>0,1 cm</b>.","Realizar a medição preferencialmente nas mesmas condições em todas as avaliações."]},
+ peso:{intro:"O <b>peso corporal</b> é um indicador antropométrico básico para acompanhar o crescimento e o desenvolvimento dos jovens praticantes de basquetebol. No modelo apresentado por <b>Matulaitis (2013)</b>, o peso é registado em <b>quilogramas (kg)</b> e comparado com valores de referência organizados por idade.",
+  passos:["O jogador deve estar <b>descalço</b> ou com condições iguais em todas as avaliações.","Utilizar roupa leve.","Colocar a balança numa superfície <b>plana e estável</b>.","O jogador permanece <b>de pé, imóvel e centrado na balança</b>.","Braços relaxados ao longo do corpo.","Efetuar a leitura quando o valor estabilizar.","Registar o resultado em <b>kg</b>, preferencialmente com precisão de <b>0,1 kg</b>."]},
+ enverg:{intro:"A <b>envergadura</b> é a distância medida entre as pontas dos dedos médios das duas mãos, com os braços totalmente estendidos lateralmente.",
+  passos:["O jogador coloca-se <b>de pé</b>, com as costas direitas.","Encosta-se à parede, mantendo uma posição estável.","Estende os <b>dois braços lateralmente</b>, à altura dos ombros.","Os cotovelos devem estar completamente estendidos.","As mãos permanecem abertas, com os dedos estendidos.","A fita métrica é colocada horizontalmente, medindo a distância entre as <b>pontas dos dedos médios</b> das duas mãos.","Registar o resultado em <b>centímetros (cm)</b>, preferencialmente com precisão de <b>0,1 cm</b>."]},
+ salto:{titulo:"Salto horizontal a pés juntos (Standing Broad Jump)",img:"img/salto.jpg",leg:"Figura 1 – Execução do salto horizontal a pés juntos",
+  intro:"É um teste de <b>força explosiva dos membros inferiores</b>, semelhante ao CMJ no sentido de avaliar a capacidade de produzir força rapidamente, mas a medição é muito mais simples: <b>mede-se a distância do salto com uma fita métrica</b>.",
+  passos:["O jogador coloca-se atrás da linha de partida.","Pés <b>paralelos e aproximadamente à largura dos ombros</b>.","Realiza uma flexão dos joelhos e leva os braços para trás.","Faz um movimento explosivo, utilizando <b>pernas e braços simultaneamente</b>.","Salta para a frente procurando alcançar a maior distância possível.","Deve realizar a receção <b>com os dois pés</b>.","Mantém a posição de chegada para facilitar a medição.","Mede-se a distância entre a <b>linha de partida e o calcanhar que ficou mais próximo da linha</b>.","Realizam-se <b>2–3 tentativas</b>.","Regista-se o melhor resultado."]},
+ c20:{img:"img/corrida.jpg",leg:"Figura 2 – Teste de 20 m em corrida",
+  intro:"O <b>teste de 20 metros</b> avalia principalmente a <b>velocidade de deslocamento e a capacidade de aceleração</b> do jovem jogador. É particularmente útil no Minibasquete porque permite acompanhar a evolução da capacidade de acelerar rapidamente numa distância curta.",
+  passos:["Marcar uma distância de <b>20 metros</b>.","O jogador coloca-se atrás da linha de partida.","Deve iniciar o teste numa posição confortável, <b>sem saída lançada</b>.","Ao sinal do avaliador, corre os 20 metros à <b>máxima velocidade possível</b>.","O cronómetro começa no sinal de partida e termina quando o jogador atravessa a linha dos 20 m.","O jogador deve continuar a correr alguns metros depois da linha de chegada, evitando travar bruscamente.","Realizar <b>2 tentativas</b>, com recuperação suficiente entre elas.","Registar o <b>melhor tempo</b>."]},
+ d20:{img:"img/drible.jpg",leg:"Figura 3 – Teste de 20 m em drible",
+  intro:"Este teste avalia a capacidade do jogador para <b>acelerar e deslocar-se rapidamente enquanto controla a bola em drible</b>. Ao contrário do teste de 20 m sem bola, acrescenta a exigência de <b>coordenação, controlo da bola e velocidade de execução</b>.",
+  passos:["Marcar uma distância de <b>20 metros</b>.","O jogador coloca-se atrás da linha de partida, <b>com a bola na mão</b>.","Ao sinal, inicia o deslocamento e percorre os 20 m <b>em drible, à máxima velocidade possível</b>.","Deve manter o controlo da bola durante todo o percurso.","A bola não pode ser transportada ou segurada durante a corrida.","O tempo termina quando o jogador <b>atravessa a linha dos 20 m</b>.","Se perder o controlo da bola, deve aplicar-se previamente um critério definido para a repetição ou invalidação da tentativa.","Realizar <b>2 tentativas</b>, com recuperação suficiente entre elas.","Registar o <b>melhor tempo</b>."]}
+};
+
+/* ---------- Utilitários ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=(v,k)=>v==null?"–":Number(v).toFixed(T[k].dec).replace(".",",");
+const num=(v,d)=>Number(v).toFixed(d).replace(".",",");
+const parse=s=>{s=String(s??"").trim().replace(",",".");if(!s)return null;const n=Number(s);return isFinite(n)?n:NaN};
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const dpt=s=>s?s.split("-").reverse().join("/"):"–";
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function idade(nasc,data){if(!nasc||!data)return null;const [y,m,d]=nasc.split("-").map(Number),[Y,M,D]=data.split("-").map(Number);let a=Y-y;if(M<m||(M===m&&D<d))a--;return a}
+function band(k,age,v){const R=REF[k];if(age==null||v==null)return null;const i=age-R.a0;if(i<0||i>=R.p[90].length)return null;
+  for(let j=0;j<9;j++){const th=R.p[PCT[j]][i];if(T[k].lower?v<=th:v>=th)return 9-j}return 0}
+function refAges(k){const R=REF[k];return R.a0+"–"+(R.a0+R.p[90].length-1)+" anos"}
+function strip(b,lg){let s='<span class="strip'+(lg?" lg":"")+'" aria-hidden="true">';for(let i=0;i<10;i++)s+='<i'+(i===b?' class="on"':"")+'></i>';return s+"</span>"}
+function bandHtml(k,age,v,lg){if(v==null)return"";const b=band(k,age,v);
+  if(b==null)return'<span class="noref">Sem referência para '+(age==null?"idade desconhecida":age+" anos")+" (tabela: "+refAges(k)+")</span>";
+  return'<span class="band">'+strip(b,lg)+BANDS[b]+"</span>"}
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3200)}
+
+/* ---------- Estado e armazenamento ---------- */
+const S={atletas:{},avaliacoes:{}};
+const ui={tab:"registo",esc:"Todos",eq:"Todas",sel:null,draft:{data:today()},repTipo:"ind",repEq:"",repDesc:false,editAth:false,confirm:null,form:{}};
+const store={db:null,dl:null,mode:"a ligar",ro:false};
+const LS="enb-testes-fisicos-v1";
+function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS)||"null");if(d){S.atletas=d.atletas||{};S.avaliacoes=d.avaliacoes||{}}}catch(e){}}
+function lsSave(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function fail(e){if(e&&e.code==="invalid_argument"){store.ro=true;toast("Esta conta só pode consultar: os dados não foram guardados.")}else toast("Não foi possível guardar. Tente novamente.");}
+function put(col,id,data){S[col][id]=data;if(store.db)return store.db.collection(col).doc(id).set(data).catch(fail);lsSave();return Promise.resolve()}
+function del(col,id){delete S[col][id];if(store.db)return store.db.collection(col).doc(id).delete().catch(fail);lsSave();return Promise.resolve()}
+async function initStore(){
+  let db=null;
+  try{if(window.claude&&window.claude.use){db=await window.claude.use("db");window.claude.use("downloads").then(d=>{store.dl=d;refresh()})}}catch(e){}
+  if(db){store.db=db;store.mode="partilhado";
+    const sub=col=>db.collection(col).onSnapshot(q=>{S[col]=Object.fromEntries(q.docs.map(d=>[d.id,{...d.data()}]));refresh()},()=>{store.mode="indisponível";refresh()});
+    sub("atletas");sub("avaliacoes");
+  }else{store.mode="local";lsLoad();render()}
+}
+
+/* ---------- Derivados ---------- */
+const athletes=()=>Object.entries(S.atletas).map(([id,a])=>({id,...a})).sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));
+const teams=()=>[...new Set(athletes().map(a=>a.equipa).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt"));
+const avalsOf=id=>Object.entries(S.avaliacoes).filter(([,v])=>v.atleta===id).map(([aid,v])=>({id:aid,...v})).sort((a,b)=>a.data.localeCompare(b.data));
+function filtered(){return athletes().filter(a=>(ui.esc==="Todos"||a.escalao===ui.esc)&&(ui.eq==="Todas"||a.equipa===ui.eq))}
+function ficha(a){const av=avalsOf(a.id),out={};
+  for(const t of TESTS){const ser=av.filter(x=>x[t.k]!=null).map(x=>({v:x[t.k],data:x.data,idade:idade(a.nasc,x.data)}));
+    const last=ser[ser.length-1]||null,prev=ser[ser.length-2]||null;
+    out[t.k]={ser,last,prev,b:last?band(t.k,last.idade,last.v):null}}
+  return{av,t:out}}
+function teamStats(list){const st={};
+  for(const t of TESTS){const vals=[],bc=Array(10).fill(0);let nb=0;
+    for(const a of list){const f=a._f.t[t.k];if(f.last){vals.push(f.last.v);if(f.b!=null){bc[f.b]++;nb++}}}
+    st[t.k]={n:vals.length,media:vals.length?vals.reduce((x,y)=>x+y,0)/vals.length:null,min:vals.length?Math.min(...vals):null,max:vals.length?Math.max(...vals):null,bc,nb}}
+  return st}
+function delta(k,f){if(!f.last||!f.prev)return"";const d=f.last.v-f.prev.v;if(Math.abs(d)<1e-9)return"igual a "+dpt(f.prev.data);
+  return(d>0?"+":"−")+num(Math.abs(d),T[k].dec)+" "+T[k].un+" desde "+dpt(f.prev.data)}
+
+/* ---------- Vistas ---------- */
+function filtersHtml(){const tm=teams();
+  return'<div class="chips" role="group" aria-label="Escalão">'+["Todos",...ESC].map(e=>'<button class="chipbtn'+(ui.esc===e?" on":"")+'" data-act="esc" data-v="'+e+'">'+e+"</button>").join("")+"</div>"+
+  '<label>Equipa<select id="f-eq" data-ch="eq"><option>Todas</option>'+tm.map(t=>"<option"+(ui.eq===t?" selected":"")+">"+esc(t)+"</option>").join("")+"</select></label>"}
+function banner(){let h="";
+  if(store.mode==="local")h+='<div class="note"><span>Os dados ficam guardados apenas neste navegador. Abra a plataforma com sessão iniciada no Claude para os guardar na conta.</span></div>';
+  if(store.mode==="indisponível")h+='<div class="note"><span>Ligação aos dados interrompida. Recarregue a página.</span></div>';
+  if(store.ro)h+='<div class="note"><span>Modo de consulta: esta conta não pode alterar os dados.</span></div>';
+  const ex=athletes().filter(a=>a.exemplo).length;
+  if(ex)h+='<div class="note"><span>Atletas de exemplo nesta lista: '+ex+". Têm nomes e resultados fictícios, para mostrar como a plataforma funciona.</span>"+
+    '<button class="btn sm ghost" data-act="rmex">'+(ui.confirm==="rmex"?"Confirmar remoção":"Remover exemplos")+"</button></div>";
+  return h}
+function athForm(a){a=a||{};const f=ui.form;const v=k=>esc(f[k]!==undefined?f[k]:(a[k]||""));const e=f.escalao!==undefined?f.escalao:(a.escalao||(ui.esc!=="Todos"?ui.esc:"Sub-10"));
+  return'<div class="panel"><label>Nome<input id="af-nome" data-f="nome" value="'+v("nome")+'" autocomplete="off"></label>'+
+  '<div class="grid2"><label>Data de nascimento<input id="af-nasc" data-f="nasc" type="date" value="'+v("nasc")+'"></label>'+
+  '<label>Escalão<select id="af-esc" data-f="escalao">'+ESC.map(x=>"<option"+(x===e?" selected":"")+">"+x+"</option>").join("")+"</select></label></div>"+
+  '<label>Equipa<input id="af-eq" data-f="equipa" list="dl-eq" value="'+esc(f.equipa!==undefined?f.equipa:(a.equipa||(ui.eq!=="Todas"?ui.eq:"")))+'" autocomplete="off"></label>'+
+  '<datalist id="dl-eq">'+teams().map(t=>'<option value="'+esc(t)+'">').join("")+"</datalist>"+
+  '<div class="row"><button class="btn" data-act="saveAth" data-id="'+(a.id||"")+'">'+(a.id?"Guardar alterações":"Adicionar atleta")+"</button>"+
+  (a.id?'<button class="btn ghost" data-act="cancelEdit">Cancelar</button>':"")+"</div></div>"}
+
+function vRegisto(){const list=filtered(),a=ui.sel&&S.atletas[ui.sel]?{id:ui.sel,...S.atletas[ui.sel]}:null;const d=ui.draft;
+  let left='<div class="stack"><span class="eyebrow">Atletas</span>'+filtersHtml();
+  left+=list.length?'<div class="alist">'+list.map(x=>'<button data-act="sel" data-id="'+x.id+'"'+(x.id===ui.sel?' class="on"':"")+"><b>"+esc(x.nome)+(x.exemplo?'<i class="tag">exemplo</i>':"")+"</b><span>"+esc(x.escalao)+(x.equipa?" · "+esc(x.equipa):"")+"</span></button>").join("")+"</div>"
+    :'<div class="empty">Ainda não há atletas neste filtro. Adicione o primeiro abaixo.</div>';
+  left+='<span class="eyebrow">Novo atleta</span>'+athForm(null)+"</div>";
+  let right;
+  if(!a)right='<div class="empty">Escolha um atleta na lista para registar os resultados dos testes.</div>';
+  else{const age=idade(a.nasc,d.data);let grp="";
+    right='<div class="stack"><div class="row between"><div><span class="eyebrow">Registo de testes</span><h2>'+esc(a.nome)+"</h2>"+
+      '<span class="muted">'+esc(a.escalao)+(a.equipa?" · "+esc(a.equipa):"")+" · "+(age!=null?age+" anos na data da avaliação":"sem data de nascimento")+"</span></div>"+
+      '<label style="width:170px">Data da avaliação<input id="rg-data" type="date" data-d="data" value="'+esc(d.data)+'"></label></div><div>';
+    for(const t of TESTS){if(t.grupo!==grp){grp=t.grupo;right+='<div class="grp">'+grp+"</div>"}
+      const v=parse(d[t.k]);
+      right+='<div class="entry"><div class="nm">'+t.nome+"<small>"+(t.ajuda||"referência: "+refAges(t.k))+"</small></div>"+
+       '<div class="inp"><input id="rg-'+t.k+'" data-d="'+t.k+'" inputmode="decimal" autocomplete="off" value="'+esc(d[t.k]||"")+'" aria-label="'+t.nome+" em "+t.un+'"><span>'+t.un+"</span></div>"+
+       '<div class="fb" id="fb-'+t.k+'">'+feedback(t.k,age,v)+"</div></div>"}
+    right+='</div><label>Observações<textarea id="rg-obs" data-d="obs">'+esc(d.obs||"")+"</textarea></label>"+
+      '<div class="row"><button class="btn" data-act="saveAv">Guardar avaliação</button><button class="btn ghost" data-act="goFicha" data-id="'+a.id+'">Ver ficha individual</button></div>'+
+      '<p class="small muted">Pode preencher só alguns testes. Se já existir uma avaliação deste atleta na mesma data, os novos valores são acrescentados a essa avaliação.</p></div>'}
+  return banner()+'<div class="cols">'+left+right+"</div>"}
+function feedback(k,age,v){if(v==null)return"";if(isNaN(v))return'<span class="err">Valor inválido.</span>';
+  const t=T[k];if(v<t.min||v>t.max)return'<span class="err">Fora do intervalo esperado ('+num(t.min,t.dec)+"–"+num(t.max,t.dec)+" "+t.un+"). Verifique a unidade.</span>";
+  return bandHtml(k,age,v)}
+
+function vEquipa(){const tm=teams();if(ui.eq!=="Todas"&&!tm.includes(ui.eq))ui.eq="Todas";
+  const list=filtered().map(a=>({...a,_f:ficha(a)}));const st=teamStats(list);
+  let h=banner()+'<div class="row between"><div><span class="eyebrow">Equipa</span><h2>'+esc(ui.eq==="Todas"?"Todas as equipas":ui.eq)+(ui.esc!=="Todos"?" · "+ui.esc:"")+"</h2></div>"+
+    '<div class="row">'+filtersHtml()+"</div></div>";
+  if(!list.length)return h+'<div class="empty">Sem atletas neste filtro.</div>';
+  const aval=list.filter(a=>a._f.av.length).length;
+  h+='<div class="facts"><div><b>'+list.length+'</b><span class="muted small">atletas</span></div><div><b>'+aval+'</b><span class="muted small">com avaliação</span></div></div>';
+  h+='<div class="scroll"><table><thead><tr><th>Atleta</th>'+TESTS.map(t=>"<th>"+t.nome+" ("+t.un+")</th>").join("")+"</tr></thead><tbody>";
+  for(const a of list){h+='<tr><td><a class="lnk" data-act="goFicha" data-id="'+a.id+'" tabindex="0">'+esc(a.nome)+'</a><span class="sub">'+esc(a.escalao)+(a.equipa&&ui.eq==="Todas"?" · "+esc(a.equipa):"")+"</span></td>";
+    for(const t of TESTS){const f=a._f.t[t.k];h+="<td>"+(f.last?fmt(f.last.v,t.k)+'<span class="sub">'+(f.b!=null?BANDS[f.b]:"sem ref.")+"</span>":"–")+"</td>"}
+    h+="</tr>"}
+  h+="</tbody><tfoot><tr><td>Média da equipa</td>"+TESTS.map(t=>"<td>"+(st[t.k].n?fmt(st[t.k].media,t.k)+'<span class="sub">n = '+st[t.k].n+"</span>":"–")+"</td>").join("")+"</tr>"+
+     "<tr><td>Mínimo – máximo</td>"+TESTS.map(t=>"<td>"+(st[t.k].n?fmt(st[t.k].min,t.k)+" – "+fmt(st[t.k].max,t.k):"–")+"</td>").join("")+"</tr></tfoot></table></div>";
+  h+='<p class="small muted">Último resultado de cada atleta, por ordem alfabética. As médias são calculadas por teste, na sua própria unidade.</p>';
+  h+='<div class="stack"><h3>Distribuição pelos percentis de referência</h3><p class="small muted">Número de atletas em cada faixa, segundo a tabela da sua idade.</p>';
+  for(const t of TESTS){const s=st[t.k];h+='<div class="stack" style="gap:5px"><b>'+t.nome+'</b>';
+    if(!s.nb)h+='<span class="noref">Sem atletas com resultado e tabela de referência aplicável.</span>';
+    else h+='<div class="dist">'+s.bc.map((c,i)=>'<div><b style="--w:'+(c?Math.round(12+c/s.nb*60):0)+'">'+c+"</b>"+BANDS[i].replace("P","")+"</div>").join("")+"</div>"+
+      (s.n>s.nb?'<span class="noref">'+(s.n-s.nb)+" atleta(s) sem referência para a idade.</span>":"");
+    h+="</div>"}
+  return h+"</div>"}
+
+function spark(k,ser){if(ser.length<2)return'<span class="noref">'+(ser.length?"1 avaliação":"")+"</span>";
+  const W=170,H=46,p=8,vs=ser.map(s=>s.v),mn=Math.min(...vs),mx=Math.max(...vs),r=mx-mn||1;
+  const pt=ser.map((s,i)=>[p+i*(W-2*p)/(ser.length-1),H-16-((s.v-mn)/r)*(H-26)]);
+  return'<svg class="spark" viewBox="0 0 '+W+" "+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Evolução de '+T[k].nome+'">'+
+   '<polyline fill="none" stroke="var(--scale)" stroke-width="2" points="'+pt.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ")+'"/>'+
+   pt.map((q,i)=>'<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="'+(i===pt.length-1?3.5:2)+'" fill="var(--scale)"/>').join("")+
+   '<text x="'+p+'" y="'+(H-2)+'">'+dpt(ser[0].data).slice(0,5)+'</text><text x="'+(W-p)+'" y="'+(H-2)+'" text-anchor="end">'+dpt(ser[ser.length-1].data).slice(0,5)+"</text></svg>"}
+function vFicha(){const all=athletes();if(!all.length)return banner()+'<div class="empty">Adicione atletas em «Testes individuais» para ver fichas.</div>';
+  if(!ui.sel||!S.atletas[ui.sel])ui.sel=all[0].id;const a={id:ui.sel,...S.atletas[ui.sel]},f=ficha(a);
+  const ageNow=idade(a.nasc,today());
+  let h=banner()+'<label style="max-width:340px">Atleta<select id="fi-sel" data-ch="sel">'+all.map(x=>'<option value="'+x.id+'"'+(x.id===a.id?" selected":"")+">"+esc(x.nome)+" ("+esc(x.escalao)+")</option>").join("")+"</select></label>";
+  h+='<div class="fhead"><div><span class="eyebrow">Ficha individual'+(a.exemplo?" · exemplo":"")+"</span><h2>"+esc(a.nome)+'</h2></div><div class="facts">'+
+    "<div><b>"+esc(a.escalao)+'</b><span class="muted small">escalão</span></div><div><b>'+esc(a.equipa||"–")+'</b><span class="muted small">equipa</span></div>'+
+    "<div><b>"+(ageNow!=null?ageNow:"–")+'</b><span class="muted small">anos (nasc. '+dpt(a.nasc)+")</span></div><div><b>"+f.av.length+'</b><span class="muted small">avaliações</span></div></div></div>';
+  h+='<div class="row"><button class="btn sm ghost" data-act="goReg" data-id="'+a.id+'">Registar testes</button><button class="btn sm ghost" data-act="editAth">Editar dados</button>'+
+    '<button class="btn sm ghost" data-act="goRep" data-id="'+a.id+'">Relatório individual</button>'+
+    '<button class="btn sm danger" data-act="delAth" data-id="'+a.id+'">'+(ui.confirm==="ath"?"Confirmar: apagar atleta e avaliações":"Apagar atleta")+"</button></div>";
+  if(ui.editAth)h+='<div style="max-width:420px">'+athForm(a)+"</div>";
+  if(!f.av.length)return h+'<div class="empty">Sem avaliações registadas para este atleta.</div>';
+  h+="<div>";let grp="";
+  for(const t of TESTS){const x=f.t[t.k];if(t.grupo!==grp){grp=t.grupo;h+='<div class="grp">'+grp+"</div>"}
+    h+='<div class="trow"><div><b>'+t.nome+'</b><div class="small muted">'+(x.last?dpt(x.last.data)+(x.last.idade!=null?" · "+x.last.idade+" anos":""):"não avaliado")+"</div></div>"+
+     '<div><span class="big">'+(x.last?fmt(x.last.v,t.k)+"<small>"+t.un+"</small>":"–")+'</span><div class="small muted">'+delta(t.k,x)+"</div></div>"+
+     "<div>"+(x.last?bandHtml(t.k,x.last.idade,x.last.v,true):"")+"</div><div>"+spark(t.k,x.ser)+"</div></div>"}
+  h+='</div><div class="stack"><h3>Histórico de avaliações</h3><div class="scroll"><table><thead><tr><th>Data</th><th>Idade</th>'+TESTS.map(t=>"<th>"+t.nome+" ("+t.un+")</th>").join("")+"<th></th></tr></thead><tbody>";
+  for(const v of [...f.av].reverse()){const ag=idade(a.nasc,v.data);
+    h+="<tr><td>"+dpt(v.data)+(v.obs?'<span class="sub" style="white-space:normal;max-width:220px">'+esc(v.obs)+"</span>":"")+"</td><td>"+(ag??"–")+"</td>"+
+     TESTS.map(t=>{const b=band(t.k,ag,v[t.k]);return"<td>"+fmt(v[t.k],t.k)+(v[t.k]!=null?'<span class="sub">'+(b!=null?BANDS[b]:"sem ref.")+"</span>":"")+"</td>"}).join("")+
+     '<td><button class="btn sm danger" data-act="delAv" data-id="'+v.id+'">'+(ui.confirm===v.id?"Confirmar":"Apagar")+"</button></td></tr>"}
+  return h+"</tbody></table></div></div>"}
+
+/* ---------- Relatórios ---------- */
+const RP_CSS=".rp{font-family:Barlow,'Segoe UI',Arial,sans-serif;color:#0e1b33;font-size:13px;line-height:1.45;max-width:900px;margin:0 auto}.rp h1{font-size:24px;margin:0 0 2px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;text-transform:uppercase;letter-spacing:.03em}.rp h2{font-size:17px;margin:22px 0 8px;border-bottom:2px solid #0e1b33;padding-bottom:3px;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;text-transform:uppercase;letter-spacing:.05em}.rp h3{font-size:14px;margin:14px 0 4px}.rp .hd{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:4px solid #c8102e;padding-bottom:8px}.rp .mt{color:#5a6680}.rp table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;margin:6px 0}.rp th,.rp td{border:1px solid #c9d1de;padding:4px 7px;text-align:right;white-space:nowrap;color:#0e1b33}.rp th{background:#eef1f6;font-weight:600}.rp th:first-child,.rp td:first-child{text-align:left}.rp .s{display:block;font-size:10.5px;color:#5a6680}.rp ol{margin:4px 0;padding-left:20px}.rp p{margin:4px 0}.rp .ft{margin-top:22px;border-top:1px solid #c9d1de;padding-top:6px;font-size:11px;color:#5a6680}@media print{.rp h2{break-after:avoid}.rp table{break-inside:auto}.rp tr{break-inside:avoid}}";
+function refTable(k,cls){const R=REF[k],n=R.p[90].length;
+  let h="<table"+(cls?' class="'+cls+'"':"")+"><thead><tr><th>Percentil</th>"+Array.from({length:n},(_,i)=>"<th>"+(R.a0+i)+" anos</th>").join("")+"</tr></thead><tbody>";
+  for(const p of PCT)h+="<tr><td>P"+p+"</td>"+R.p[p].map(v=>"<td>"+num(v,T[k].dec===1?1:2)+"</td>").join("")+"</tr>";
+  return h+"<tr><td>"+R.ampL+"</td>"+R.amp.map(v=>"<td>"+v+"</td>").join("")+"</tr></tbody></table>"}
+function rpNotes(){return'<p class="mt">Percentis de referência: faixa em que o resultado se situa na tabela da idade do atleta à data da avaliação (anos completos). Altura, peso, envergadura e 20 m em corrida: Matulaitis, K. (2013), 7–17 anos. 20 m em drible: Matulaitis, K. et al. (2019), 7–11 anos. Salto horizontal: Quadro 4 do documento ENB, 7–12 anos. Fora destas idades indica-se «sem referência». Nos testes de tempo, menos segundos correspondem a percentil mais alto.</p>'}
+function rpProto(){let h="<h2>Descrição dos testes</h2>";for(const t of TESTS){const p=PROTO[t.k];
+  h+="<h3>"+(p.titulo||t.nome)+"</h3><p>"+p.intro+"</p><ol>"+p.passos.map(s=>"<li>"+s+"</li>").join("")+"</ol>"+refTable(t.k)+'<p class="mt">'+t.quadro+" – valores de referência por percentil e idade ("+t.un+"). "+(t.fonte?"Fonte: "+t.fonte:"Fonte não indicada no documento.")+"</p>"}
+  return h}
+function rpHead(tit,sub){return'<div class="hd"><div><h1>'+tit+'</h1><div class="mt">'+sub+'</div></div><div class="mt" style="text-align:right">Escola Nacional de Basquetebol<br>Testes físicos · '+dpt(today())+"</div></div>"}
+function repInd(a){const f=ficha(a),ag=idade(a.nasc,today());
+  let h=rpHead(esc(a.nome),"Relatório individual · "+esc(a.escalao)+(a.equipa?" · "+esc(a.equipa):"")+" · nasc. "+dpt(a.nasc)+(ag!=null?" ("+ag+" anos)":""));
+  h+="<h2>Últimos resultados</h2><table><thead><tr><th>Teste</th><th>Resultado</th><th>Data</th><th>Idade</th><th>Percentil de referência</th><th>Variação</th></tr></thead><tbody>";
+  for(const t of TESTS){const x=f.t[t.k];h+="<tr><td>"+t.nome+"</td><td>"+(x.last?fmt(x.last.v,t.k)+" "+t.un:"–")+"</td><td>"+(x.last?dpt(x.last.data):"–")+"</td><td>"+(x.last&&x.last.idade!=null?x.last.idade:"–")+"</td><td>"+(x.last?(x.b!=null?BANDS[x.b]:"sem referência"):"–")+"</td><td>"+(delta(t.k,x)||"–")+"</td></tr>"}
+  h+="</tbody></table><h2>Histórico de avaliações</h2>";
+  if(!f.av.length)h+="<p>Sem avaliações registadas.</p>";
+  else{h+="<table><thead><tr><th>Data</th><th>Idade</th>"+TESTS.map(t=>"<th>"+t.nome+" ("+t.un+")</th>").join("")+"</tr></thead><tbody>";
+    for(const v of f.av){const g=idade(a.nasc,v.data);h+="<tr><td>"+dpt(v.data)+"</td><td>"+(g??"–")+"</td>"+TESTS.map(t=>{const b=band(t.k,g,v[t.k]);return"<td>"+fmt(v[t.k],t.k)+(v[t.k]!=null?'<span class="s">'+(b!=null?BANDS[b]:"sem ref.")+"</span>":"")+"</td>"}).join("")+"</tr>"}
+    h+="</tbody></table>";const ob=f.av.filter(v=>v.obs);if(ob.length)h+="<h3>Observações</h3>"+ob.map(v=>"<p><b>"+dpt(v.data)+":</b> "+esc(v.obs)+"</p>").join("")}
+  return h+rpNotes()+(ui.repDesc?rpProto():"")+'<div class="ft">Plataforma ENB Testes Físicos</div>'}
+function repTeam(eq){const list=athletes().filter(a=>(!eq||a.equipa===eq)&&(ui.esc==="Todos"||a.escalao===ui.esc)).map(a=>({...a,_f:ficha(a)})),st=teamStats(list);
+  let h=rpHead(esc(eq||"Todas as equipas"),"Relatório de equipa"+(ui.esc!=="Todos"?" · "+ui.esc:"")+" · "+list.length+" atletas");
+  h+="<h2>Último resultado por atleta</h2><table><thead><tr><th>Atleta</th><th>Escalão</th>"+TESTS.map(t=>"<th>"+t.nome+" ("+t.un+")</th>").join("")+"</tr></thead><tbody>";
+  for(const a of list)h+="<tr><td>"+esc(a.nome)+"</td><td>"+esc(a.escalao)+"</td>"+TESTS.map(t=>{const f=a._f.t[t.k];return"<td>"+(f.last?fmt(f.last.v,t.k)+'<span class="s">'+(f.b!=null?BANDS[f.b]:"sem ref.")+"</span>":"–")+"</td>"}).join("")+"</tr>";
+  h+="<tr><th>Média</th><th></th>"+TESTS.map(t=>"<th>"+(st[t.k].n?fmt(st[t.k].media,t.k):"–")+"</th>").join("")+"</tr>"+
+     "<tr><th>Mínimo – máximo</th><th></th>"+TESTS.map(t=>"<th>"+(st[t.k].n?fmt(st[t.k].min,t.k)+" – "+fmt(st[t.k].max,t.k):"–")+"</th>").join("")+"</tr>"+
+     "<tr><th>Atletas avaliados</th><th></th>"+TESTS.map(t=>"<th>"+st[t.k].n+"</th>").join("")+"</tr></tbody></table>";
+  h+="<h2>Distribuição pelos percentis de referência</h2><table><thead><tr><th>Teste</th>"+BANDS.map(b=>"<th>"+b+"</th>").join("")+"<th>Sem ref.</th></tr></thead><tbody>";
+  for(const t of TESTS)h+="<tr><td>"+t.nome+"</td>"+st[t.k].bc.map(c=>"<td>"+(c||"·")+"</td>").join("")+"<td>"+((st[t.k].n-st[t.k].nb)||"·")+"</td></tr>";
+  return h+"</tbody></table>"+rpNotes()+(ui.repDesc?rpProto():"")+'<div class="ft">Plataforma ENB Testes Físicos</div>'}
+function repCurrent(){const all=athletes();if(ui.repTipo==="ind"){if(!ui.sel||!S.atletas[ui.sel])ui.sel=all[0]&&all[0].id;if(!ui.sel)return null;const a={id:ui.sel,...S.atletas[ui.sel]};return{html:repInd(a),nome:"Relatorio_"+a.nome}}
+  return{html:repTeam(ui.repEq),nome:"Relatorio_equipa_"+(ui.repEq||"todas")}}
+function vRel(){const all=athletes(),tm=teams();if(!all.length)return banner()+'<div class="empty">Adicione atletas e avaliações para gerar relatórios.</div>';
+  if(ui.repEq&&!tm.includes(ui.repEq))ui.repEq="";const r=repCurrent();
+  let h=banner()+'<div class="row between"><div><span class="eyebrow">Relatórios</span><h2>'+(ui.repTipo==="ind"?"Relatório individual":"Relatório de equipa")+"</h2></div></div>"+
+   '<div class="row" style="align-items:flex-end"><div class="chips"><button class="chipbtn'+(ui.repTipo==="ind"?" on":"")+'" data-act="rt" data-v="ind">Individual</button><button class="chipbtn'+(ui.repTipo==="eq"?" on":"")+'" data-act="rt" data-v="eq">Equipa</button></div>';
+  if(ui.repTipo==="ind")h+='<label style="width:260px">Atleta<select id="rp-ath" data-ch="sel">'+all.map(x=>'<option value="'+x.id+'"'+(x.id===ui.sel?" selected":"")+">"+esc(x.nome)+"</option>").join("")+"</select></label>";
+  else h+='<label style="width:200px">Equipa<select id="rp-eq" data-ch="repEq"><option value="">Todas</option>'+tm.map(t=>'<option'+(ui.repEq===t?" selected":"")+">"+esc(t)+"</option>").join("")+"</select></label>"+
+    '<label style="width:140px">Escalão<select id="rp-esc" data-ch="escSel">'+["Todos",...ESC].map(e=>"<option"+(ui.esc===e?" selected":"")+">"+e+"</option>").join("")+"</select></label>";
+  h+='<label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:.92rem"><input id="rp-desc" type="checkbox" data-ch="repDesc" style="width:auto"'+(ui.repDesc?" checked":"")+"> Incluir descrição dos testes e tabelas</label></div>";
+  h+='<div class="row">'+(store.dl?'<button class="btn" data-act="dlRep">Guardar relatório (.html)</button><button class="btn ghost" data-act="dlCsv">Exportar todos os dados (.csv)</button>':'<span class="small muted">Para guardar o ficheiro, abra a plataforma no Claude com sessão iniciada.</span>')+"</div>"+
+   (store.dl?'<p class="small muted">Abra o ficheiro guardado no navegador e use Imprimir → Guardar como PDF.</p>':"");
+  return h+'<div class="paper"><div class="rp">'+r.html+"</div></div>"}
+function csv(){const q=s=>'"'+String(s??"").replace(/"/g,'""')+'"';const rows=[["Atleta","Data de nascimento","Escalão","Equipa","Data da avaliação","Idade",...TESTS.flatMap(t=>[t.nome+" ("+t.un+")","Percentil "+t.nome]),"Observações"]];
+  for(const a of athletes())for(const v of avalsOf(a.id)){const g=idade(a.nasc,v.data);rows.push([a.nome,a.nasc,a.escalao,a.equipa||"",v.data,g??"",...TESTS.flatMap(t=>{const b=band(t.k,g,v[t.k]);return[v[t.k]!=null?fmt(v[t.k],t.k):"",v[t.k]!=null?(b!=null?BANDS[b]:"sem referência"):""]}),v.obs||""])}
+  return"﻿"+rows.map(r=>r.map(q).join(";")).join("\r\n")}
+
+function vTestes(){let h='<div class="stack"><span class="eyebrow">Escola Nacional de Basquetebol</span><h2>Protocolos de avaliação e valores de referência por idade</h2>'+
+  '<div class="toc">'+TESTS.map(t=>'<a class="chipbtn" href="#t-'+t.k+'" data-act="jump" data-v="t-'+t.k+'" style="text-decoration:none">'+t.nome+"</a>").join("")+"</div>"+
+  '<p class="small muted" style="max-width:75ch">Como a plataforma lê as tabelas: o resultado é comparado com os valores da coluna da idade do atleta (anos completos na data da avaliação) e colocado na faixa correspondente, de «&lt; P10» a «≥ P90». A linha «&lt; 10» das tabelas originais é usada como limite do percentil 10. Nos testes de tempo, menos segundos correspondem a percentil mais alto. Quando não há tabela para a idade, a plataforma indica «sem referência» e não calcula percentil.</p></div>';
+  let grp="";for(const t of TESTS){const p=PROTO[t.k];
+    h+='<section class="test" id="t-'+t.k+'">'+(t.grupo!==grp?'<span class="grp" style="padding:0">'+(grp=t.grupo)+"</span>":"")+"<h3>"+(p.titulo||t.nome)+"</h3><p>"+p.intro+"</p>"+
+     (p.img?'<figure><img src="'+p.img+'" alt="'+esc(p.leg)+'" loading="lazy"><figcaption>'+p.leg+"</figcaption></figure>":"")+
+     '<b>Procedimento</b><ol>'+p.passos.map(s=>"<li>"+s+"</li>").join("")+"</ol>"+
+     "<b>"+t.quadro+" – valores de referência por percentil e idade ("+t.un+")</b><div class=\"scroll\">"+refTable(t.k)+"</div>"+
+     '<span class="small muted">'+(t.fonte?"Fonte: "+t.fonte:"Fonte não indicada no documento.")+"</span></section>"}
+  return h}
+
+/* ---------- Render e eventos ---------- */
+const view=$("#view");let pending=false;
+function render(){pending=false;const y=window.scrollY;
+  document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.dataset.tab===ui.tab));
+  if(store.mode==="a ligar"){view.innerHTML='<div class="empty">A carregar atletas e avaliações…</div>';return}
+  view.innerHTML=({registo:vRegisto,equipa:vEquipa,ficha:vFicha,relatorios:vRel,testes:vTestes})[ui.tab]();window.scrollTo(0,y)}
+function refresh(){const el=document.activeElement;if(el&&view.contains(el)&&/INPUT|TEXTAREA|SELECT/.test(el.tagName)){pending=true;return}render()}
+view.addEventListener("focusout",()=>setTimeout(()=>{if(pending)refresh()},50));
+function go(tab){ui.tab=tab;ui.confirm=null;ui.editAth=false;ui.form={};try{history.replaceState(null,"","#"+tab)}catch(e){}render();window.scrollTo(0,0)}
+$("#nav").addEventListener("click",e=>{const a=e.target.closest("a");if(a){e.preventDefault();go(a.dataset.tab)}});
+view.addEventListener("input",e=>{const el=e.target;
+  if(el.dataset.f){ui.form[el.dataset.f]=el.value;return}
+  if(el.dataset.d){ui.draft[el.dataset.d]=el.value;const a=S.atletas[ui.sel];if(!a)return;const age=idade(a.nasc,ui.draft.data);
+    if(el.dataset.d==="data")TESTS.forEach(t=>{const f=$("#fb-"+t.k);if(f)f.innerHTML=feedback(t.k,age,parse(ui.draft[t.k]))});
+    else if(T[el.dataset.d]){const f=$("#fb-"+el.dataset.d);if(f)f.innerHTML=feedback(el.dataset.d,age,parse(el.value))}}});
+view.addEventListener("change",e=>{const el=e.target,c=el.dataset.ch;if(!c)return;
+  if(c==="eq")ui.eq=el.value;else if(c==="sel"){ui.sel=el.value;ui.editAth=false;ui.form={}}else if(c==="repEq")ui.repEq=el.value;else if(c==="escSel")ui.esc=el.value;else if(c==="repDesc")ui.repDesc=el.checked;
+  ui.confirm=null;render()});
+view.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("a[data-act]"))e.target.click()});
+view.addEventListener("click",async e=>{const b=e.target.closest("[data-act]");if(!b)return;const act=b.dataset.act,id=b.dataset.id,v=b.dataset.v;
+  const two=key=>{if(ui.confirm!==key){ui.confirm=key;render();return false}ui.confirm=null;return true};
+  switch(act){
+   case"esc":ui.esc=v;render();break;
+   case"sel":ui.sel=id;ui.draft={data:ui.draft.data||today()};render();break;
+   case"goFicha":ui.sel=id;go("ficha");break;
+   case"goReg":ui.sel=id;ui.draft={data:today()};go("registo");break;
+   case"goRep":ui.sel=id;ui.repTipo="ind";go("relatorios");break;
+   case"rt":ui.repTipo=v;render();break;
+   case"jump":e.preventDefault();{const s=document.getElementById(v);if(s)s.scrollIntoView({behavior:"smooth",block:"start"})}break;
+   case"editAth":ui.editAth=!ui.editAth;ui.form={};render();break;
+   case"cancelEdit":ui.editAth=false;ui.form={};render();break;
+   case"saveAth":{const cur=id?S.atletas[id]:null;const g=(k,el)=>(($(el)||{}).value||"").trim();
+     const sc=b.closest(".panel");const q=s=>sc.querySelector(s).value.trim();
+     const d={nome:q("#af-nome"),nasc:q("#af-nasc"),escalao:q("#af-esc"),equipa:q("#af-eq")};
+     if(!d.nome){toast("Indique o nome do atleta.");break}
+     if(!d.nasc){toast("Indique a data de nascimento: é necessária para os percentis por idade.");break}
+     if(d.nasc>today()){toast("A data de nascimento não pode ser futura.");break}
+     if(cur&&cur.exemplo)d.exemplo=true;const nid=id||uid("a");ui.form={};ui.editAth=false;ui.sel=nid;
+     put("atletas",nid,d);toast(id?"Dados do atleta atualizados.":"Atleta adicionado: "+d.nome);render();break}
+   case"saveAv":{const a=S.atletas[ui.sel];if(!a)break;const d=ui.draft,vals={};let bad=null;
+     if(!d.data){toast("Indique a data da avaliação.");break}
+     if(d.data>today()){toast("A data da avaliação não pode ser futura.");break}
+     for(const t of TESTS){const n=parse(d[t.k]);if(n==null)continue;if(isNaN(n)||n<t.min||n>t.max){bad=t;break}vals[t.k]=n}
+     if(bad){toast("Corrija o valor de «"+bad.nome+"» antes de guardar.");break}
+     if(!Object.keys(vals).length){toast("Preencha pelo menos um teste.");break}
+     const ex=avalsOf(ui.sel).find(x=>x.data===d.data);
+     const doc=ex?{...S.avaliacoes[ex.id],...vals}:{atleta:ui.sel,data:d.data,...vals};
+     if((d.obs||"").trim())doc.obs=((ex&&ex.obs&&ex.obs!==d.obs.trim())?ex.obs+" · ":"")+d.obs.trim();
+     if(a.exemplo)doc.exemplo=true;
+     ui.draft={data:d.data};put("avaliacoes",ex?ex.id:uid("v"),doc);
+     toast(ex?"Avaliação de "+dpt(d.data)+" atualizada.":"Avaliação de "+dpt(d.data)+" guardada.");render();break}
+   case"delAv":if(two(id)){del("avaliacoes",id);toast("Avaliação apagada.");render()}break;
+   case"delAth":if(two("ath")){for(const x of avalsOf(id))del("avaliacoes",x.id);del("atletas",id);ui.sel=null;toast("Atleta apagado.");render()}break;
+   case"rmex":if(two("rmex")){for(const [k,x] of Object.entries(S.avaliacoes))if(x.exemplo||(S.atletas[x.atleta]||{}).exemplo)del("avaliacoes",k);
+     for(const [k,x] of Object.entries(S.atletas))if(x.exemplo)del("atletas",k);ui.sel=null;toast("Exemplos removidos.");render()}break;
+   case"dlRep":{const r=repCurrent();if(!r||!store.dl)break;
+     const doc='<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(r.nome)+"</title><style>body{margin:24px;background:#fff}"+RP_CSS+'</style></head><body><div class="rp">'+r.html+"</div></body></html>";
+     try{await store.dl.save({filename:r.nome.replace(/[^\wÀ-ÿ-]+/g,"_")+".html",data:doc});toast("Relatório guardado.")}catch(er){if(er&&er.code!=="declined")toast("Não foi possível guardar o ficheiro.")}break}
+   case"dlCsv":if(!store.dl)break;try{await store.dl.save({filename:"ENB_testes_fisicos_"+today()+".csv",data:csv()});toast("Dados exportados.")}catch(er){if(er&&er.code!=="declined")toast("Não foi possível guardar o ficheiro.")}break;
+  }});
+const st=document.createElement("style");st.textContent=RP_CSS;document.head.appendChild(st);
+const h0=(location.hash||"").slice(1);if(["registo","equipa","ficha","relatorios","testes"].includes(h0))ui.tab=h0;
+render();initStore();
+setTimeout(()=>{if(store.mode==="a ligar"){store.mode="local";lsLoad();render()}},11000);
+</script>
+
+</body></html>
